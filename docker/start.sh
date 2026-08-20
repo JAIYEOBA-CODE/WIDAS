@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 set -e
 
+php artisan package:discover --ansi
 php artisan config:clear
 php artisan migrate --force
 php artisan db:seed --class=RolePermissionSeeder --force
