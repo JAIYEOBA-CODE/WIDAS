@@ -10,7 +10,7 @@ COPY public ./public
 COPY tsconfig.json vite.config.js vite.config.ts ./
 RUN npm run build
 
-FROM php:8.3-cli-bookworm
+FROM php:8.4-cli-bookworm
 
 WORKDIR /var/www/html
 
