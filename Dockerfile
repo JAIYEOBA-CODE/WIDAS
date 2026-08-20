@@ -1,4 +1,16 @@
-FROM php:8.3-cli
+FROM node:22-bookworm AS assets
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY resources ./resources
+COPY public ./public
+COPY tsconfig.json vite.config.js vite.config.ts ./
+RUN npm run build
+
+FROM php:8.3-cli-bookworm
 
 WORKDIR /var/www/html
 
@@ -9,13 +21,12 @@ RUN apt-get update \
         git \
         libonig-dev \
         libpq-dev \
+        libsqlite3-dev \
         libxml2-dev \
         libzip-dev \
         unzip \
         zip \
     && docker-php-ext-install bcmath dom mbstring pdo_mysql pdo_pgsql pdo_sqlite zip \
-    && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
-    && apt-get install -y --no-install-recommends nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -24,9 +35,11 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
-    && npm ci \
-    && npm run build \
-    && chmod +x docker/start.sh
+    && chmod +x docker/start.sh \
+    && mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
+COPY --from=assets /app/public/build ./public/build
 
 EXPOSE 10000
 
