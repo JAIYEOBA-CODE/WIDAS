@@ -1,0 +1,29 @@
+/* WIDAS Mail Theme */
+body {
+    background-color: #f4f4f7;
+    color: #0F172A;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    background-color: #0F172A;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.button {
+    background-color: #FF5A36;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.footer {
+    color: #94a3b8;
+    font-size: 12px;
+    text-align: center;
+    padding: 20px;
+}
